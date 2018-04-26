@@ -204,28 +204,36 @@ public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
 
     private void jBSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jBSearchActionPerformed
         // TODO add your handling code here:
-        boolean Customer= false ;
-        int i = 0;
+        boolean customerSearch= false ;
+        int i;
        
         if(jTID.getText()==null){//message to fill emty field
-        JOptionPane.showMessageDialog(null, "Enter a vustomer ID","Error",JOptionPane.ERROR_MESSAGE);
+        JOptionPane.showMessageDialog(null, "Enter a Customer ID","Error",JOptionPane.ERROR_MESSAGE);
         jTID.requestFocus();
         
         }else{
                 
         for ( i = 0; i <customersList.size(); i++) {
             if(jTID.getText().equals(customersList.get(i).getId())){
-            Customer = true;
+            customerSearch = true;
             break;
             }
+        }
+        
+            // print info in fields of true
+            if(customerSearch==true){
+                jTName.setText(customersList.get(i).getFullName());
+                jTPoints.setText(customersList.get(i).getRewardPoints()+"");
+  
+            }
             else{
-            JOptionPane.showMessageDialog(null, "Customer no Found","Error",JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "Customer not Found","Error",JOptionPane.ERROR_MESSAGE);
             jTID.requestFocus();
             return;
             
             }
             
-        }
+        
         }
         
     }//GEN-LAST:event_jBSearchActionPerformed
