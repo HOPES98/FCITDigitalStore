@@ -1,4 +1,5 @@
 
+
 import javax.swing.JOptionPane;
 import java.util.*;
 import java.io.*;
@@ -13,6 +14,8 @@ import java.io.*;
  * @author molaa
  */
 public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
+     public static ArrayList<Customer> customersList = new ArrayList<>();
+    public static ArrayList<Item> digitalItems = new ArrayList<>();
 
     /**
      * Creates new form FCIT_DigitalStore_Frame
@@ -210,8 +213,8 @@ public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
         
         }else{
                 
-        for ( i = 0; i <FCIT_DigitalStoreSystem.customersList.size(); i++) {
-            if(jTID.getText().equals(FCIT_DigitalStoreSystem.customersList.get(i).getId())){
+        for ( i = 0; i <customersList.size(); i++) {
+            if(jTID.getText().equals(customersList.get(i).getId())){
             Customer = true;
             break;
             }
@@ -242,7 +245,7 @@ public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
+    public static void main(String args[]) throws FileNotFoundException {
         /* Set the Nimbus look and feel */
         //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
@@ -272,6 +275,177 @@ public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
                 new FCIT_DigitalStore_Frame().setVisible(true);
             }
         });
+        
+        File inputFile = new File("input.txt");//openinning unput file to read from
+        // ONE: basic preparatioins for programming:
+        //a.check the existence of files
+        if (!inputFile.exists()) {
+            System.out.println("The File does not exist...");
+            System.exit(0);
+        }
+        //b.create scanner for the input file
+        Scanner input = new Scanner(inputFile);
+        
+        //c.PrintWriter for both Command output and transactions prints
+        PrintWriter output1 = new PrintWriter("Commandsoutput1.txt");
+        PrintWriter output2 = new PrintWriter("Transactions.txt");
+        
+        //TWO: start reading the files and store data..
+         while (input.hasNext()) {
+            switch (input.next()) {
+                case "Add_Customer":{
+                    output1.println("******** COMMAND: ADD_CUSTOMER ********");
+                    String fisrtName = input.next();
+                    String lastName = input.next();
+                    int customerId = Integer.parseInt(input.next());
+                    int customerAge = Integer.parseInt(input.next());
+                    int points = Integer.parseInt(input.next());
+                    Customer customer = new Customer(fisrtName, lastName, customerId, customerAge, points);                    
+                    customersList.add(customer);
+                    output1.println(customer.toString());
+                    output1.println("---------------------------------------------------------------------");
+                }
+                    break;
+                
+                case "Add_Movie":{
+                    output1.println("******** COMMAND: ADD_MOVIE ********");
+                    String movieName = input.next();
+                    int moviePrice = Integer.parseInt(input.next());
+                    Movie movie = new Movie(movieName, moviePrice);
+                    digitalItems.add(movie);
+                    output1.println(movie.toString());
+                    output1.println("---------------------------------------------------------------------");
+                }
+                    break;
+                case "Add_Documentary":{
+                    output1.println("******** COMMAND: ADD_DOCUMENTARY ********");
+                    String documentaryName = input.next();
+                    int documentaryPrice = Integer.parseInt(input.next());
+                    Documentary documantary = new Documentary(documentaryName, documentaryPrice);
+                    digitalItems.add(documantary);
+                    output1.println(documantary.toString());
+                    output1.println("---------------------------------------------------------------------");
+                }
+                    break;
+                case "Add_Series":{
+                    output1.println("******** COMMAND: ADD_SERIES ********");
+                    String seriesName = input.next();
+                    int seriesPrice = Integer.parseInt(input.next());
+                    int season = Integer.parseInt(input.next());
+                    Series s = new Series(seriesName, seriesPrice, season);
+                    digitalItems.add(s);
+                    output1.println(s.toString());
+                    output1.println("---------------------------------------------------------------------");
+                }
+                    break;
+                case "Order_Series":{
+                    int seriesOrderId = Integer.parseInt(input.next());
+                    String seriesOrderName = input.next();
+                    int customerSeriesId = Integer.parseInt(input.next());
+                    int seasonSeries = Integer.parseInt(input.next());
+                    
+
+                    for (int i = 0; i < digitalItems.size(); i++) {//itrating items array to search
+                        if (digitalItems.get(i).getName().equalsIgnoreCase(seriesOrderName)) {
+                            for (int j = 0; j < customersList.size(); j++) {
+                                int id = customersList.get(j).getId();
+                                if (id == customerSeriesId) {
+                                    //crearting new movie order to validate 
+                                    Transaction movieOrder = new Transaction(seriesOrderId, customersList.get(j), digitalItems.get(i));
+                                    try {
+                                        customersList.get(j).addTransaction(movieOrder);
+                                        output1.println("******** COMMAND: ORDER_SERIES ********");
+                                        output1.println(customersList.get(j).toString());
+                                        output1.println(movieOrder.toString());
+                                        output1.println("---------------------------------------------------------------------");
+                                    } catch (UnderAgeException exception) {
+                                        output1.println("******** COMMAND: ORDER_SERIES ********");
+                                        output1.println(exception.getMessage());
+                                        output1.println("---------------------------------------------------------------------");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                    break;
+                case "Order_Movie":
+                    int movieTransactionId = Integer.parseInt(input.next());
+                    String movieNameTransaction = input.next();
+                    int movieCustomerId = Integer.parseInt(input.next());
+                    for (int i = 0; i < digitalItems.size(); i++) {
+                        if (digitalItems.get(i).getName().equalsIgnoreCase(movieNameTransaction)) {
+                            for (int j = 0; j < customersList.size(); j++) {
+                                int id = customersList.get(j).getId();
+                                if (id == movieCustomerId) {
+                                    Transaction movieOrder = new Transaction(movieTransactionId, customersList.get(j), digitalItems.get(i));
+                                    try {
+                                        customersList.get(j).addTransaction(movieOrder);
+                                        output1.println("******** COMMAND: ORDER_MOVIE ********");
+                                        output1.println(customersList.get(j).toString());
+                                        output1.println(movieOrder.toString());
+                                        output1.println("---------------------------------------------------------------------");
+                                    } catch (UnderAgeException exception) {
+                                        output1.println("******** COMMAND: ORDER_MOVIE ********");
+                                        output1.println(exception.getMessage());
+                                        output1.println("---------------------------------------------------------------------");
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "Order_Documentary":
+                    int TransactionID1 = Integer.parseInt(input.next());
+                    String NameOfTheDocumentary = input.next();
+                    int CustomerID1 = Integer.parseInt(input.next());
+
+                    for (int i = 0; i < digitalItems.size(); i++) {
+                        if (digitalItems.get(i).getName().equalsIgnoreCase(NameOfTheDocumentary)) {
+                            for (int j = 0; j < customersList.size(); j++) {
+                                int id = customersList.get(j).getId();
+                                if (id == CustomerID1) {
+                                    Transaction movieOrder = new Transaction(TransactionID1, customersList.get(j), digitalItems.get(i));
+
+                                    customersList.get(j).getTranList().add(movieOrder);
+                                    output1.println("******** COMMAND: ORDER_DOCUMENTARY********");
+                                    output1.println(customersList.get(j).toString());
+                                    output1.println(movieOrder.toString());
+                                    output1.println("---------------------------------------------------------------------");
+
+                                }
+                            }
+                        }
+                    }
+                    break;
+                case "Print_Transactions":
+                    output2.println("******** COMMAND: PRINT_TRANSACTIONS ********");
+                    output2.println("######################################################################");
+                    Collections.sort(customersList);
+                    for (int i = 0; i < customersList.size(); i++) {
+                        Collections.sort(customersList.get(i).getTranList());
+                        output2.println(customersList.get(i).toString());
+                        if (customersList.get(i).getTranList().isEmpty()) {
+                            output2.println("NONE...");
+                        } else {
+                            for (int j = 0; j < customersList.get(i).getTranList().size(); j++) {
+                                output2.println("Transaction ID: " + customersList.get(i).getTranList().get(j).getTranID() + "	Total Cost: " + customersList.get(i).getTranList().get(j).getCost());
+                            }
+                        }
+                        output2.println("######################################################################");
+                    }
+                    break;
+                case "END":
+                    output1.println("Thanks for using FCIT Digital System..");
+                    input.close();
+                    output1.close();
+                    output2.close();
+
+            }
+        }
+        input.close();
+        output1.close();
+        output2.close();
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
