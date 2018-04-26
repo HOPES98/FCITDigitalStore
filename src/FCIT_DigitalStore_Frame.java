@@ -1,12 +1,16 @@
 
 
 import javax.swing.JOptionPane;
-import java.util.*;
 import java.io.*;
+import java.util.*;
+
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * 
+Name: Amal Ahmed
+ID: 17051113
+Section: BBR
+Course: Introduction to Java 203
+
  */
 
 /**
@@ -14,8 +18,9 @@ import java.io.*;
  * @author molaa
  */
 public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
-     public static ArrayList<Customer> customersList = new ArrayList<>();
+    //arraylists to be used all over the projrct
     public static ArrayList<Item> digitalItems = new ArrayList<>();
+    public static ArrayList<Customer> customersList = new ArrayList<>();
 
     /**
      * Creates new form FCIT_DigitalStore_Frame
