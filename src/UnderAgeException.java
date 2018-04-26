@@ -1,9 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+ * 
+Name: Amal Ahmed
+ID: 17051113
+Section: BBR
+Course: Introduction to Java 203
 
+ */
 /**
  *
  * @author molaa
@@ -12,7 +14,7 @@
 
 public class UnderAgeException extends Exception {
 /*
-    If the transaction was for either a movie or a series and the customer’s age was less
+If the transaction was for either a movie or a series and the customer’s age was less
 than 18, then an UnderAgeException object is thrown with the message:
 ● Use try-catch block to handle this exception and to print the exception message to the
 file.
