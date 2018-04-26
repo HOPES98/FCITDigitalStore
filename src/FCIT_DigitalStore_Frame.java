@@ -344,21 +344,21 @@ public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
                     int customerSeriesId = Integer.parseInt(input.next());
                     int seasonSeries = Integer.parseInt(input.next());
                     
-
-                    for (int i = 0; i < digitalItems.size(); i++) {//itrating items array to search
+                    for (int i = 0; i < digitalItems.size(); i++) {//1itrating items array to search
                         if (digitalItems.get(i).getName().equalsIgnoreCase(seriesOrderName)) {
-                            for (int j = 0; j < customersList.size(); j++) {
-                                int id = customersList.get(j).getId();
-                                if (id == customerSeriesId) {
-                                    //crearting new movie order to validate 
-                                    Transaction movieOrder = new Transaction(seriesOrderId, customersList.get(j), digitalItems.get(i));
-                                    try {
+                            for (int j = 0; j < customersList.size(); j++) {//itrating customers array to serch
+                                if (customersList.get(j).getId() == customerSeriesId) {//making sure to have matched id's within
+                                    
+                                    
+                                    try {//using under age exceptioin, adding arrays is done within customer class> transactions array list
+                                        Transaction movieOrder = new Transaction(seriesOrderId, customersList.get(j), digitalItems.get(i));
                                         customersList.get(j).addTransaction(movieOrder);
                                         output1.println("******** COMMAND: ORDER_SERIES ********");
                                         output1.println(customersList.get(j).toString());
                                         output1.println(movieOrder.toString());
                                         output1.println("---------------------------------------------------------------------");
-                                    } catch (UnderAgeException exception) {
+                                    } 
+                                    catch (UnderAgeException exception) {//when an under age orders.
                                         output1.println("******** COMMAND: ORDER_SERIES ********");
                                         output1.println(exception.getMessage());
                                         output1.println("---------------------------------------------------------------------");
@@ -373,19 +373,20 @@ public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
                     int movieTransactionId = Integer.parseInt(input.next());
                     String movieNameTransaction = input.next();
                     int movieCustomerId = Integer.parseInt(input.next());
-                    for (int i = 0; i < digitalItems.size(); i++) {
+                   
+                    for (int i = 0; i < digitalItems.size(); i++) {//searchig items for the nsme of the movie
                         if (digitalItems.get(i).getName().equalsIgnoreCase(movieNameTransaction)) {
-                            for (int j = 0; j < customersList.size(); j++) {
-                                int id = customersList.get(j).getId();
-                                if (id == movieCustomerId) {
-                                    Transaction movieOrder = new Transaction(movieTransactionId, customersList.get(j), digitalItems.get(i));
-                                    try {
+                            for (int j = 0; j < customersList.size(); j++) {//searching customers for the correct Id
+                                if (customersList.get(j).getId() == movieCustomerId) {
+                                  
+                                    try {//using under age exceptioin, adding arrays is done within customer class> transactions array list
+                                        Transaction movieOrder = new Transaction(movieTransactionId, customersList.get(j), digitalItems.get(i));
                                         customersList.get(j).addTransaction(movieOrder);
                                         output1.println("******** COMMAND: ORDER_MOVIE ********");
                                         output1.println(customersList.get(j).toString());
                                         output1.println(movieOrder.toString());
                                         output1.println("---------------------------------------------------------------------");
-                                    } catch (UnderAgeException exception) {
+                                    } catch (UnderAgeException exception) {//a message is thrown when an enderage orders
                                         output1.println("******** COMMAND: ORDER_MOVIE ********");
                                         output1.println(exception.getMessage());
                                         output1.println("---------------------------------------------------------------------");
@@ -403,8 +404,9 @@ public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
                     for (int i = 0; i < digitalItems.size(); i++) {
                         if (digitalItems.get(i).getName().equalsIgnoreCase(NameOfTheDocumentary)) {
                             for (int j = 0; j < customersList.size(); j++) {
-                                int id = customersList.get(j).getId();
-                                if (id == CustomerID1) {
+                                
+                                if (customersList.get(j).getId() == CustomerID1) {
+                                    //documentaries don't need an undeAgeException
                                     Transaction movieOrder = new Transaction(TransactionID1, customersList.get(j), digitalItems.get(i));
 
                                     customersList.get(j).getTranList().add(movieOrder);
@@ -418,16 +420,24 @@ public class FCIT_DigitalStore_Frame extends javax.swing.JFrame {
                         }
                     }
                     break;
+                    //printing in an other file (output2)
                 case "Print_Transactions":
                     output2.println("******** COMMAND: PRINT_TRANSACTIONS ********");
                     output2.println("######################################################################");
+                    //first we sort the arrayList Customers:
                     Collections.sort(customersList);
+                    
+                    //begin printing the sorted array list:
                     for (int i = 0; i < customersList.size(); i++) {
+                        //SORT THE SUBLIST OF TRANSACTIONS
                         Collections.sort(customersList.get(i).getTranList());
+                        
                         output2.println(customersList.get(i).toString());
-                        if (customersList.get(i).getTranList().isEmpty()) {
+                        if (customersList.get(i).getTranList().isEmpty()) {//when no transaction is found
                             output2.println("NONE...");
-                        } else {
+                        } else 
+                        
+                        {//print the sorted arraylist of transactions in customer class
                             for (int j = 0; j < customersList.get(i).getTranList().size(); j++) {
                                 output2.println("Transaction ID: " + customersList.get(i).getTranList().get(j).getTranID() + "	Total Cost: " + customersList.get(i).getTranList().get(j).getCost());
                             }
